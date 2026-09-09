@@ -1180,6 +1180,7 @@ p { color: var(--text-mid); }
 
 .kickoff-countdown {
   margin-top: 28px;
+  color: white;
 }
 
 .kickoff-countdown h3 {
@@ -1187,6 +1188,7 @@ p { color: var(--text-mid); }
   font-size: 2rem;
   letter-spacing: 0.04em;
   margin-bottom: 20px;
+  color: white;
 }
 
 .countdown-boxes {
@@ -1201,9 +1203,11 @@ p { color: var(--text-mid); }
 
   border-radius: 16px;
 
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
 
   text-align: center;
+
+  perspective: 500px;
 }
 
 .countdown-unit span {
@@ -1212,6 +1216,10 @@ p { color: var(--text-mid); }
   font-family: "Bebas Neue", sans-serif;
   font-size: 2.8rem;
   line-height: 1;
+
+  color: white;
+
+  transform-origin: center;
 }
 
 .countdown-unit small {
@@ -1225,7 +1233,8 @@ p { color: var(--text-mid); }
   text-transform: uppercase;
   letter-spacing: 0.08em;
 
-  opacity: 0.7;
+  color: white;
+  opacity: 0.75;
 }
 
 #kickoff-timezone {
@@ -1234,7 +1243,38 @@ p { color: var(--text-mid); }
   font-family: "Space Mono", monospace;
   font-size: 0.75rem;
 
-  opacity: 0.7;
+  color: white;
+  opacity: 0.8;
+}
+
+
+/* FLIP ANIMATION */
+
+.countdown-unit span.flip {
+  animation: countdownFlip 0.45s ease;
+}
+
+@keyframes countdownFlip {
+
+  0% {
+    transform: rotateX(0deg);
+  }
+
+  45% {
+    transform: rotateX(-90deg);
+    opacity: 0.3;
+  }
+
+  55% {
+    transform: rotateX(90deg);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+
 }
 
 
