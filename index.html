@@ -1,174 +1,283 @@
-<!-- SEASON TEASER -->
-<section class="section season-teaser">
-  <div class="container season-teaser-inner">
-    <div class="season-teaser-text">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      <p class="section-eyebrow">Current Season</p>
+  <title>Surf Robotics | FTC Team</title>
 
-      <h2 class="section-title">2026–2027</h2>
+  <link rel="icon" type="image/x-icon" href="templogo.png">
+  <link rel="stylesheet" href="style.css">
 
-      <p>GET READY!</p>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+</head>
 
-      <!-- BIOBUZZ COUNTDOWN -->
-      <div class="kickoff-countdown">
+<body class="page-home">
 
-        <h3>BIOBUZZ Kickoff</h3>
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="/" class="nav-logo">
+      <span class="logo-wave">~</span>
+      SURF ROBOTICS
+    </a>
 
-        <div class="countdown-boxes">
+    <button
+      class="nav-toggle"
+      id="navToggle"
+      aria-label="Toggle menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
-          <div class="countdown-unit">
-            <span id="days">00</span>
-            <small>Days</small>
-          </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="about">About Us</a></li>
+      <li><a href="season">2026–27 Season</a></li>
+      <li><a href="outreach">Outreach & Sponsors</a></li>
+      <li><a href="robot">Robot</a></li>
+    </ul>
+  </nav>
 
-          <div class="countdown-unit">
-            <span id="hours">00</span>
-            <small>Hours</small>
-          </div>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-bg">
+      <div class="wave wave1"></div>
+      <div class="wave wave2"></div>
+      <div class="wave wave3"></div>
+    </div>
 
-          <div class="countdown-unit">
-            <span id="minutes">00</span>
-            <small>Minutes</small>
-          </div>
+    <div class="hero-content">
+      <p><br></p>
 
-          <div class="countdown-unit">
-            <span id="seconds">00</span>
-            <small>Seconds</small>
-          </div>
+      <p class="hero-eyebrow">
+        FIRST® Tech Challenge Robotics Team
+      </p>
 
+      <h1 class="hero-title">
+        SURF<br>
+        ROBOTICS
+      </h1>
+
+      <h2 class="hero-sub">
+        FTC Team 37182
+      </h2>
+
+      <p><br></p>
+
+      <div class="hero-actions">
+        <a href="season" class="btn btn-primary">
+          2026–27 Season
+        </a>
+
+        <a href="robot" class="btn btn-primary">
+          Introducing Our Robot
+        </a>
+
+        <a
+          href="https://www.youtube.com/@FTCTeamSurf"
+          class="btn btn-ghost"
+        >
+          Youtube channel
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      SCROLL DOWN
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <video
+    width="600"
+    height="600"
+    autoplay
+    loop
+    muted
+    playsinline
+    width="100%"
+  >
+    <source src="robot.mp4" type="video/mp4">
+  </video>
+
+  <img
+    src="starter.jpeg"
+    alt="FIRST® Tech Challenge Logo"
+    width="500"
+  >
+
+  <section class="stats-bar">
+    <div class="stat">
+      <span class="stat-num">0</span>
+      <span class="stat-label">Seasons</span>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat">
+      <span class="stat-num">6</span>
+      <span class="stat-label">Team Members</span>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat">
+      <span class="stat-num">0</span>
+      <span class="stat-label">Awards</span>
+    </div>
+
+    <div class="stat-divider"></div>
+
+    <div class="stat">
+      <span class="stat-num">0</span>
+      <span class="stat-label">Outreach Hours</span>
+    </div>
+  </section>
+
+  <!-- HIGHLIGHTS -->
+  <section class="section highlights">
+    <div class="container">
+      <p class="section-eyebrow">
+        What We Do
+      </p>
+
+      <h2 class="section-title">
+        Engineering.<br>
+        Innovation.<br>
+        Community.
+      </h2>
+
+      <div class="cards-grid">
+
+        <div class="card card-teal">
+          <div class="card-icon"></div>
+
+          <h3>Build</h3>
+
+          <p>
+            We design and fabricate competitive robots using
+            Onshape CAD and hands-on fabrication.
+          </p>
         </div>
 
-        <p id="kickoff-timezone">
-          September 12, 2026 · 9:00 AM PDT
+        <div class="card card-sand">
+          <div class="card-icon"></div>
+
+          <h3>Code</h3>
+
+          <p>
+            Our software team will write autonomous routines
+            and driver-assist systems in Block using FTC SDK
+            and computer vision.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SEASON TEASER -->
+  <section class="section season-teaser">
+    <div class="container season-teaser-inner">
+
+      <div class="season-teaser-text">
+        <p class="section-eyebrow">
+          Current Season
         </p>
 
+        <h2 class="section-title">
+          2026–2027
+        </h2>
+
+        <p>GET READY!</p>
+
+        <script src="https://cdn.logwork.com/widget/countdown.js"></script>
+
+        <a
+          href="https://logwork.com/countdown-bom4"
+          class="countdown-timer"
+          data-style="flip3"
+          data-timezone="Europe/London"
+          data-textcolor="#cccccc"
+          data-date="2026-09-12 17:00"
+          data-unitscolor="#cccccc"
+        >
+          BIOBUZZ Kickoff
+        </a>
+      </div>
+
+      <p class="robot-caption"></p>
+
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- LATEST BLOG -->
+  <section class="section blog-teaser">
+    <div class="container">
+
+      <div class="blog-teaser-header">
+        <div>
+          <p class="section-eyebrow">
+            Latest Updates
+          </p>
+
+          <h2 class="section-title-sm">
+            On July 2, 2026, Blog was successfully migrated
+            to the engineering notebook.
+          </h2>
+        </div>
+
+        <a href="blog.html" class="btn btn-ghost">
+          All Posts →
+        </a>
       </div>
 
     </div>
-  </div>
-</section>
+  </section>
 
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
 
-<script>
-  /*
-    BIOBUZZ Kickoff
-    September 12, 2026
-    9:00 AM Pacific Daylight Time
+      <div class="footer-brand">
+        <span class="logo-wave">~</span>
+        SURF ROBOTICS
 
-    PDT = UTC-7
-  */
+        <p>
+          teamwork, effort, and integrity
+        </p>
+      </div>
 
-  const kickoffTime = new Date("2026-09-12T09:00:00-07:00");
+      <nav class="footer-nav">
+        <a href="/">Home</a>
+        <a href="about">About</a>
+        <a href="season">Season</a>
+        <a href="outreach">Outreach</a>
+        <a href="robot">Robot</a>
+      </nav>
 
-  const daysElement = document.getElementById("days");
-  const hoursElement = document.getElementById("hours");
-  const minutesElement = document.getElementById("minutes");
-  const secondsElement = document.getElementById("seconds");
-  const timezoneElement = document.getElementById("kickoff-timezone");
+      <img
+        src="FIRSTTech_iconHorz_RGB_reverse.png.webp"
+        alt="FIRST® Tech Challenge Logo"
+        width="200"
+      >
 
+      <p class="footer-copy">
+        © 2026 Surf Robotics. The FIRST® Tech Challenge Logo
+        is a trademark of FIRST®
+      </p>
 
-  /*
-    Detect visitor's local browser timezone.
+    </div>
+  </footer>
 
-    This normally follows the computer/phone's timezone.
-    If detection fails, EDT is used as the fallback.
-  */
-  function setLocalKickoffTime() {
+  <script src="main.js"></script>
 
-    try {
-
-      const detectedTimezone =
-        Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-      if (!detectedTimezone) {
-        throw new Error("Timezone unavailable");
-      }
-
-      const localTime = new Intl.DateTimeFormat("en-US", {
-        timeZone: detectedTimezone,
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        timeZoneName: "short"
-      }).format(kickoffTime);
-
-      timezoneElement.textContent =
-        localTime + " · " + detectedTimezone;
-
-    } catch (error) {
-
-      /*
-        Fallback:
-        9:00 AM PDT = 12:00 PM EDT
-      */
-
-      timezoneElement.textContent =
-        "September 12, 2026 · 12:00 PM EDT";
-
-    }
-
-  }
-
-
-  function updateCountdown() {
-
-    const now = new Date();
-    const difference = kickoffTime - now;
-
-
-    /*
-      Countdown finished
-    */
-    if (difference <= 0) {
-
-      daysElement.textContent = "00";
-      hoursElement.textContent = "00";
-      minutesElement.textContent = "00";
-      secondsElement.textContent = "00";
-
-      document.querySelector(".kickoff-countdown h3").textContent =
-        "BIOBUZZ Kickoff Is Here!";
-
-      return;
-    }
-
-
-    const days = Math.floor(
-      difference / (1000 * 60 * 60 * 24)
-    );
-
-    const hours = Math.floor(
-      (difference / (1000 * 60 * 60)) % 24
-    );
-
-    const minutes = Math.floor(
-      (difference / (1000 * 60)) % 60
-    );
-
-    const seconds = Math.floor(
-      (difference / 1000) % 60
-    );
-
-
-    daysElement.textContent =
-      String(days).padStart(2, "0");
-
-    hoursElement.textContent =
-      String(hours).padStart(2, "0");
-
-    minutesElement.textContent =
-      String(minutes).padStart(2, "0");
-
-    secondsElement.textContent =
-      String(seconds).padStart(2, "0");
-
-  }
-
-
-  setLocalKickoffTime();
-  updateCountdown();
-
-  setInterval(updateCountdown, 1000);
-</script>
+</body>
+</html>
