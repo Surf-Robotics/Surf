@@ -1,18 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="icon" type="image/x-icon" href="templogo.png">
-<link rel="stylesheet" href="style.css">
-  <head>
-    <title>Error 404\</title>
-  </head>
-  <body>
-    <img src="templogo.png" width="400">
-    <h1>Error</h1>
-    <p>We're sorry, but the page you attempted to visit was not found.</p>
-    <p>If you are looking for the blog, it has been migrated to the notebook<p></p>
-   
-    <a href="https://www.surfbots.org/index.html">Go Home</a>
 
-    <p><br><br><br><br><br>This website is undergoing maintenance, therefore this page may show up on existing pages. Try again in a few days.</p>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Error 404 | Surf Robotics</title>
+
+  <link rel="icon" type="image/x-icon" href="templogo.png">
+  <link rel="stylesheet" href="style.css">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+</head>
+
+<body class="page-inner">
+
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <a href="/" class="nav-logo">
+      <span class="logo-wave">~</span>
+      SURF ROBOTICS
+    </a>
+
+    <button
+      class="nav-toggle"
+      id="navToggle"
+      aria-label="Toggle menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="about">About Us</a></li>
+      <li><a href="season">2026–27 Season</a></li>
+      <li><a href="outreach">Outreach & Sponsors</a></li>
+      <li><a href="robot">Robot</a></li>
+    </ul>
+  </nav>
+
+
+  <!-- HERO -->
+  <header class="page-hero">
+    <div class="page-hero-bg"></div>
+
+    <div class="container">
+      <h1 class="page-hero-title">404</h1>
+    </div>
+  </header>
+
+
+  <main>
+
+    <!-- ERROR MESSAGE -->
+    <section class="section">
+
+      <div
+        class="container"
+        style="
+          text-align: center;
+          max-width: 760px;
+        "
+      >
+
+        <img
+          src="templogo.png"
+          alt="Surf Robotics Logo"
+          style="
+            width: 180px;
+            max-width: 45%;
+            height: auto;
+            margin-bottom: 30px;
+          "
+        >
+
+        <h2 class="section-title-sm">
+          Page Not Found
+        </h2>
+
+        <p style="font-size: 1.05rem; margin-bottom: 15px;">
+          We're sorry, but the page you attempted to visit could not be found.
+        </p>
+
+        <p style="margin-bottom: 15px;">
+          If you are looking for the blog, it has been migrated to the notebook.
+        </p>
+
+        <p style="margin-bottom: 35px;">
+          The page may also be temporarily unavailable while the website is
+          undergoing maintenance.
+        </p>
+
+        <a href="/" class="btn btn-primary">
+          Go Home
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- MAINTENANCE NOTE -->
+    <section class="section section-sand">
+
+      <div
+        class="container"
+        style="
+          max-width: 760px;
+          text-align: center;
+        "
+      >
+
+        <h2 class="section-title-sm">
+          Website Maintenance
+        </h2>
+
+        <p>
+          This website is currently being updated, so this page may occasionally
+          appear while existing pages are being changed.
+        </p>
+
+        <p>
+          Please try again later or return to the homepage.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+
+    <div class="container footer-inner">
+
+      <div class="footer-brand">
+        <span class="logo-wave">~</span>
+        SURF ROBOTICS
+
+        <p>
+          teamwork, effort, and integrity
+        </p>
+      </div>
+
+      <nav class="footer-nav">
+        <a href="/">Home</a>
+        <a href="about">About</a>
+        <a href="season">Season</a>
+        <a href="outreach">Outreach</a>
+        <a href="robot">Robot</a>
+      </nav>
+
+      <img
+        src="FIRSTTech_iconHorz_RGB_reverse.png.webp"
+        alt="FIRST® Tech Challenge Logo"
+        width="200"
+      >
+
+      <p class="footer-copy">
+        © 2026 Surf Robotics. The FIRST® Tech Challenge Logo is a trademark of FIRST®
+      </p>
+
+    </div>
+
+  </footer>
+
+
+  <script src="main.js"></script>
+
+</body>
+
 </html>
