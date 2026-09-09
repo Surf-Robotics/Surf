@@ -181,42 +181,180 @@
     </div>
   </section>
 
-  <!-- SEASON TEASER -->
-  <section class="section season-teaser">
-    <div class="container season-teaser-inner">
+<!-- SEASON TEASER -->
+<section class="section season-teaser">
+  <div class="container season-teaser-inner">
+    <div class="season-teaser-text">
 
-      <div class="season-teaser-text">
-        <p class="section-eyebrow">
-          Current Season
+      <p class="section-eyebrow">Current Season</p>
+
+      <h2 class="section-title">2026–2027</h2>
+
+      <p>GET READY!</p>
+
+      <!-- BIOBUZZ COUNTDOWN -->
+      <div class="kickoff-countdown">
+
+        <h3>BIOBUZZ Kickoff</h3>
+
+        <div class="countdown-boxes">
+
+          <div class="countdown-unit">
+            <span id="days">00</span>
+            <small>Days</small>
+          </div>
+
+          <div class="countdown-unit">
+            <span id="hours">00</span>
+            <small>Hours</small>
+          </div>
+
+          <div class="countdown-unit">
+            <span id="minutes">00</span>
+            <small>Minutes</small>
+          </div>
+
+          <div class="countdown-unit">
+            <span id="seconds">00</span>
+            <small>Seconds</small>
+          </div>
+
+        </div>
+
+        <p id="kickoff-timezone">
+          September 12, 2026 · 9:00 AM PDT
         </p>
 
-        <h2 class="section-title">
-          2026–2027
-        </h2>
-
-        <p>GET READY!</p>
-
-        <script src="https://cdn.logwork.com/widget/countdown.js"></script>
-
-        <a
-          href="https://logwork.com/countdown-bom4"
-          class="countdown-timer"
-          data-style="flip3"
-          data-timezone="Europe/London"
-          data-textcolor="#cccccc"
-          data-date="2026-09-12 17:00"
-          data-unitscolor="#cccccc"
-        >
-          BIOBUZZ Kickoff
-        </a>
       </div>
 
-      <p class="robot-caption"></p>
+    </div>
+  </div>
+</section>
 
-    </div>
-    </div>
-    </div>
-  </section>
+
+<script>
+  /*
+    BIOBUZZ Kickoff
+    September 12, 2026
+    9:00 AM Pacific Daylight Time
+
+    PDT = UTC-7
+  */
+
+  const kickoffTime = new Date("2026-09-12T09:00:00-07:00");
+
+  const daysElement = document.getElementById("days");
+  const hoursElement = document.getElementById("hours");
+  const minutesElement = document.getElementById("minutes");
+  const secondsElement = document.getElementById("seconds");
+  const timezoneElement = document.getElementById("kickoff-timezone");
+
+
+  /*
+    Detect visitor's local browser timezone.
+
+    This normally follows the computer/phone's timezone.
+    If detection fails, EDT is used as the fallback.
+  */
+  function setLocalKickoffTime() {
+
+    try {
+
+      const detectedTimezone =
+        Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+      if (!detectedTimezone) {
+        throw new Error("Timezone unavailable");
+      }
+
+      const localTime = new Intl.DateTimeFormat("en-US", {
+        timeZone: detectedTimezone,
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short"
+      }).format(kickoffTime);
+
+      timezoneElement.textContent =
+        localTime + " · " + detectedTimezone;
+
+    } catch (error) {
+
+      /*
+        Fallback:
+        9:00 AM PDT = 12:00 PM EDT
+      */
+
+      timezoneElement.textContent =
+        "September 12, 2026 · 12:00 PM EDT";
+
+    }
+
+  }
+
+
+  function updateCountdown() {
+
+    const now = new Date();
+    const difference = kickoffTime - now;
+
+
+    /*
+      Countdown finished
+    */
+    if (difference <= 0) {
+
+      daysElement.textContent = "00";
+      hoursElement.textContent = "00";
+      minutesElement.textContent = "00";
+      secondsElement.textContent = "00";
+
+      document.querySelector(".kickoff-countdown h3").textContent =
+        "BIOBUZZ Kickoff Is Here!";
+
+      return;
+    }
+
+
+    const days = Math.floor(
+      difference / (1000 * 60 * 60 * 24)
+    );
+
+    const hours = Math.floor(
+      (difference / (1000 * 60 * 60)) % 24
+    );
+
+    const minutes = Math.floor(
+      (difference / (1000 * 60)) % 60
+    );
+
+    const seconds = Math.floor(
+      (difference / 1000) % 60
+    );
+
+
+    daysElement.textContent =
+      String(days).padStart(2, "0");
+
+    hoursElement.textContent =
+      String(hours).padStart(2, "0");
+
+    minutesElement.textContent =
+      String(minutes).padStart(2, "0");
+
+    secondsElement.textContent =
+      String(seconds).padStart(2, "0");
+
+  }
+
+
+  setLocalKickoffTime();
+  updateCountdown();
+
+  setInterval(updateCountdown, 1000);
+</script>
 
   <!-- LATEST BLOG -->
   <section class="section blog-teaser">
