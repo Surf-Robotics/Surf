@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Build notes, programming updates, and team news from Surf Robotics, FTC Team 37182."
+  >
+
+  <title>Blog | Surf Robotics</title>
+
+  <link rel="icon" type="image/x-icon" href="templogo.png">
+  <link rel="stylesheet" href="style.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    /* Card colors, corners, fonts, and effects come from style.css. */
+    /* These additions apply only to this page. */
+    .page-blog .hero {
+      height: auto;
+      min-height: 380px;
+      padding: 140px 24px 72px;
+    }
+
+    .page-blog .hero-title {
+      font-size: clamp(3.5rem, 10vw, 7rem);
+    }
+
+    .page-blog .blog-intro {
+      max-width: 38rem;
+      margin: 1rem auto 0;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .page-blog .blog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      margin-top: 2rem;
+    }
+
+    .page-blog .blog-card {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .page-blog .blog-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1rem;
+      margin-bottom: 1rem;
+      font-family: "Space Mono", monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .page-blog .blog-category {
+      font-weight: 700;
+    }
+
+    .page-blog .blog-card p {
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .page-blog .blog-details {
+      margin-top: 1.5rem;
+      border-top: 1px solid currentColor;
+    }
+
+    .page-blog .blog-details summary {
+      padding: 1rem 0;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .page-blog .blog-details summary:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+
+    .page-blog .blog-details p + p {
+      margin-top: 1rem;
+    }
+
+    .page-blog .blog-details .label-close,
+    .page-blog .blog-details[open] .label-open {
+      display: none;
+    }
+
+    .page-blog .blog-details[open] .label-close {
+      display: inline;
+    }
+
+    .page-blog :focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 5px;
+    }
+
+    .blog-skip-link {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 9999;
+      padding: 0.75rem 1rem;
+      color: #111;
+      background: #fff;
+      border-radius: 8px;
+      transform: translateY(-200%);
+    }
+
+    .blog-skip-link:focus {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 700px) {
+      .page-blog .blog-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .page-blog .hero {
+        min-height: 320px;
+        padding: 120px 20px 56px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page-blog *,
+      .page-blog *::before,
+      .page-blog *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="page-home page-blog">
+  <a class="blog-skip-link" href="#main-content">Skip to blog posts</a>
+
+  <!-- NAV: Uses the same markup and main.js hooks as your home page. -->
+  <nav class="nav" aria-label="Main navigation">
+    <a href="/" class="nav-logo">
+      <span class="logo-wave" aria-hidden="true">~</span>
+      SURF ROBOTICS
+    </a>
+
+    <button
+      class="nav-toggle"
+      id="navToggle"
+      type="button"
+      aria-label="Toggle menu"
+      aria-controls="navLinks"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
+      <li><a href="about">About Us</a></li>
+      <li><a href="season">2026–27 Season</a></li>
+      <li><a href="outreach">Outreach &amp; Sponsors</a></li>
+      <li><a href="robot">Robot</a></li>
+      <li><a href="blog.html" class="active" aria-current="page">Blog</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="wave wave1"></div>
+      <div class="wave wave2"></div>
+      <div class="wave wave3"></div>
+    </div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Surf Robotics · FTC Team 37182</p>
+      <h1 class="hero-title">TEAM BLOG</h1>
+      <p class="blog-intro">
+        Build notes, programming updates, and stories from our team.
+      </p>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="section highlights" aria-labelledby="updates-title">
+      <div class="container">
+        <p class="section-eyebrow">Latest Updates</p>
+        <h2 class="section-title" id="updates-title">From the workshop.</h2>
+
+        <!--
+          STARTER POSTS: Edit these titles and paragraphs for your real updates.
+          To add a post, copy one complete <article> block.
+          Use card-teal or card-sand to reuse your existing card styles.
+          Add dates with <time datetime="YYYY-MM-DD">Month D, YYYY</time>.
+        -->
+        <div class="cards-grid blog-grid">
+
+          <!-- POST 1 -->
+          <article class="card card-teal blog-card" aria-labelledby="post-season">
+            <div class="blog-meta">
+              <span class="blog-category">Season Preview</span>
+              <span>2026–2027</span>
+            </div>
+
+            <h3 id="post-season">Getting ready for our first season</h3>
+            <p>
+              Six team members. One robot to build. We’re getting ready
+              for the 2026–27 FIRST® Tech Challenge season.
+            </p>
+
+            <details class="blog-details">
+              <summary>
+                <span class="label-open">Read more</span>
+                <span class="label-close">Read less</span>
+              </summary>
+              <p>
+                Our plans bring together robot design, hands-on fabrication,
+                and programming. Each part gives us a different challenge
+                to work through as a team.
+              </p>
+              <p>
+                We’ll share updates here as the season develops, from our
+                early ideas to the changes we make along the way.
+              </p>
+            </details>
+          </article>
+
+          <!-- POST 2 -->
+          <article class="card card-sand blog-card" aria-labelledby="post-notebook">
+            <div class="blog-meta">
+              <span class="blog-category">Team News</span>
+              <time datetime="2026-07-02">July 2, 2026</time>
+            </div>
+
+            <h3 id="post-notebook">Our blog has a new home</h3>
+            <p>
+              On July 2, 2026, our blog was successfully migrated
+              to the engineering notebook.
+            </p>
+
+            <details class="blog-details">
+              <summary>
+                <span class="label-open">Read more</span>
+                <span class="label-close">Read less</span>
+              </summary>
+              <p>
+                The engineering notebook is the home for our detailed
+                project records. This page will share highlights and team
+                news as we continue building and learning.
+              </p>
+            </details>
+          </article>
+
+          <!-- POST 3 -->
+          <article class="card card-sand blog-card" aria-labelledby="post-build">
+            <div class="blog-meta">
+              <span class="blog-category">Build</span>
+            </div>
+
+            <h3 id="post-build">From an idea to a robot</h3>
+            <p>
+              We design and fabricate competitive robots using Onshape CAD
+              and hands-on fabrication.
+            </p>
+
+            <details class="blog-details">
+              <summary>
+                <span class="label-open">Read more</span>
+                <span class="label-close">Read less</span>
+              </summary>
+              <p>
+                Our build updates will follow that process: the ideas we
+                explore, the parts we make, and what we learn when we put
+                them together.
+              </p>
+              <p>
+                We want to show the decisions behind the robot as well
+                as the finished result.
+              </p>
+            </details>
+          </article>
+
+          <!-- POST 4 -->
+          <article class="card card-teal blog-card" aria-labelledby="post-code">
+            <div class="blog-meta">
+              <span class="blog-category">Code</span>
+            </div>
+
+            <h3 id="post-code">Planning our robot’s next move</h3>
+            <p>
+              Our software team plans to develop autonomous routines
+              and driver-assist systems using FTC Blocks, the FTC SDK,
+              and computer vision.
+            </p>
+
+            <details class="blog-details">
+              <summary>
+                <span class="label-open">Read more</span>
+                <span class="label-close">Read less</span>
+              </summary>
+              <p>
+                Programming updates will cover the behaviors we’re working
+                on and what happens when we test them on the robot.
+              </p>
+              <p>
+                We’ll share both the working solutions and the problems
+                that help us understand our code better.
+              </p>
+            </details>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="logo-wave" aria-hidden="true">~</span>
+        SURF ROBOTICS
+        <p>teamwork, effort, and integrity</p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="/">Home</a>
+        <a href="about">About</a>
+        <a href="season">Season</a>
+        <a href="outreach">Outreach</a>
+        <a href="robot">Robot</a>
+        <a href="blog.html" aria-current="page">Blog</a>
+      </nav>
+
+      <img
+        src="FIRSTTech_iconHorz_RGB_reverse.png.webp"
+        alt="FIRST® Tech Challenge Logo"
+        width="200"
+        loading="lazy"
+      >
+
+      <p class="footer-copy">
+        © 2026 Surf Robotics. The FIRST® Tech Challenge Logo
+        is a trademark of FIRST®
+      </p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
