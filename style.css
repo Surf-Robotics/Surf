@@ -1176,3 +1176,71 @@ p { color: var(--text-mid); }
   .section { padding: 56px 0; }
   .modal-content { padding: 28px 24px; }
 }
+
+/* ========================================
+   HOME PAGE VIDEO + PHOTO
+   ======================================== */
+
+.home-media {
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.home-media .container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+}
+
+.media-item {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.responsive-media {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  border-radius: 24px;
+}
+
+/* Make video and image the same visual size */
+video.responsive-media,
+img.responsive-media {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* Tablets and phones */
+@media (max-width: 768px) {
+  .home-media {
+    padding: 30px 16px;
+  }
+
+  .home-media .container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .media-item,
+  .responsive-media {
+    border-radius: 18px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .home-media {
+    padding: 20px 12px;
+  }
+
+  .media-item,
+  .responsive-media {
+    border-radius: 14px;
+  }
+}
