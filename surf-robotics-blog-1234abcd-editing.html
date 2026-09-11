@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Blog Editor | Surf Robotics</title>
+  <link rel="icon" href="templogo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; --bg:#0a191f; --panel:#112730; --raised:#193640; --text:#f5f1e8; --muted:#bac9cb; --accent:#e8c87a; --line:#36515b; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:1rem/1.55 "DM Sans",sans-serif; }
+    button,input,textarea,select { font:inherit; }
+    button,a,input,textarea,select,summary { -webkit-tap-highlight-color:transparent; }
+    button,a,summary { touch-action:manipulation; }
+    button { cursor:pointer; }
+    button:disabled { opacity:.4; cursor:default; }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+    a { color:var(--accent); text-underline-offset:4px; }
+    .shell { max-width:1600px; margin:auto; padding:24px clamp(16px,3vw,48px) 48px; }
+    .masthead,.heading,.toolbar,.panel-title,.post-actions,.field-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .masthead { justify-content:space-between; padding-bottom:22px; border-bottom:1px solid var(--line); }
+    .brand { font-weight:700; letter-spacing:.05em; }
+    .brand span { color:var(--accent); font-size:1.5rem; margin-right:8px; }
+    .heading { justify-content:space-between; margin:28px 0 18px; }
+    h1 { font:clamp(2.6rem,5vw,4.4rem)/1 "Bebas Neue",sans-serif; letter-spacing:.015em; margin:0 0 12px; }
+    h2 { font-size:1.1rem; margin:0; }
+    p { margin:0; }
+    .muted,.hint { color:var(--muted); }
+    .hint { font-size:.875rem; line-height:1.55; margin-top:6px; }
+    .button { display:inline-flex; justify-content:center; align-items:center; min-height:44px; padding:10px 15px; border:1px solid var(--line); border-radius:10px; color:var(--text); background:var(--raised); text-decoration:none; font-weight:600; }
+    .button:hover:not(:disabled) { border-color:var(--accent); }
+    .primary { background:var(--accent); color:#142229; border-color:var(--accent); }
+    .danger { color:#ffc4bc; }
+    .toolbar { padding:16px; border:1px solid var(--line); background:var(--panel); border-radius:16px; }
+    .toolbar .primary { margin-left:auto; }
+    .status { margin:14px 0 20px; min-height:1.55em; font-size:.875rem; color:var(--muted); }
+    .status[data-error="true"] { color:#ffc4bc; }
+    .workspace { display:grid; grid-template-columns:220px minmax(300px,1fr) minmax(300px,1fr); gap:18px; min-width:0; padding:0; border:0; margin:0; }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:20px; min-width:0; align-self:start; }
+    .panel-title { justify-content:space-between; margin-bottom:18px; }
+    .count { font:.875rem "Space Mono",monospace; color:var(--muted); }
+    .post-list { list-style:none; padding:0; margin:0 0 16px; display:grid; gap:8px; }
+    .post-button { width:100%; text-align:left; background:transparent; color:var(--text); border:1px solid var(--line); border-radius:12px; padding:13px; overflow-wrap:anywhere; }
+    .post-button[aria-pressed="true"] { border-color:var(--accent); background:var(--raised); }
+    .post-button span { display:block; }
+    .post-button small { color:var(--muted); display:block; margin-bottom:5px; font-size:.875rem; }
+    .full { width:100%; }
+    .empty { color:var(--muted); padding:12px 0; }
+    .field { display:block; margin-bottom:18px; min-width:0; }
+    .field > span { display:block; margin-bottom:7px; font-weight:600; font-size:.875rem; }
+    input,textarea,select { width:100%; min-height:44px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--text); padding:11px 12px; }
+    textarea { resize:vertical; min-height:110px; }
+    #post-body { min-height:235px; }
+    .field-row { align-items:start; gap:14px; }
+    .field-row .field { flex:1 1 140px; }
+    .post-actions { justify-content:space-between; margin-top:6px; }
+    .post-actions .reorder { display:flex; gap:8px; flex-wrap:wrap; }
+    .page-options { margin-top:24px; border-top:1px solid var(--line); padding-top:16px; }
+    .page-options summary { cursor:pointer; font-weight:600; padding:6px 0 14px; }
+    .preview-panel { padding:16px; }
+    iframe { display:block; width:100%; height:760px; border:1px solid var(--line); border-radius:12px; background:#fff; }
+    .publishing { margin-top:18px; font-size:.875rem; color:var(--muted); }
+    .publishing strong { color:var(--text); }
+    [hidden] { display:none !important; }
+    @media(max-width:1180px) { .workspace { grid-template-columns:210px minmax(0,1fr); } .preview-panel { grid-column:1 / -1; } iframe { height:620px; } }
+    @media(max-width:650px) { .workspace { grid-template-columns:minmax(0,1fr); } .preview-panel { grid-column:auto; } .toolbar .primary { margin-left:0; } .toolbar .button { flex:1 1 180px; } .post-list { max-height:270px; overflow:auto; } .panel { padding:16px; } }
+    @media(prefers-reduced-motion:reduce) { * { scroll-behavior:auto !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand"><span aria-hidden="true">~</span>SURF ROBOTICS</div>
+      <a href="blog.html" target="_blank" rel="noopener">Open published blog</a>
+    </header>
+
+    <div class="heading">
+      <div>
+        <h1>Blog editor</h1>
+        <p class="muted">Edit your posts, preview the page, and download your next update.</p>
+      </div>
+    </div>
+
+    <div class="toolbar" aria-label="Blog files">
+      <button class="button" type="button" id="load-published">Load published blog</button>
+      <button class="button" type="button" id="open-file">Open blog.html</button>
+      <input id="file-input" type="file" accept=".html,.htm,text/html" hidden>
+      <button class="button primary" type="button" id="download">Download blog.html</button>
+    </div>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <fieldset class="workspace" id="workspace" aria-label="Blog editing workspace">
+      <aside class="panel" aria-labelledby="posts-title">
+        <div class="panel-title"><h2 id="posts-title">Posts</h2><span class="count" id="post-count"></span></div>
+        <ol class="post-list" id="post-list"></ol>
+        <button type="button" class="button full" id="add-post">+ Add post</button>
+        <p class="hint">Posts appear in this order on the blog.</p>
+      </aside>
+
+      <section class="panel" aria-labelledby="edit-title">
+        <div class="panel-title"><h2 id="edit-title">Edit post</h2></div>
+        <p id="empty-state" class="empty" hidden>Add a post to start writing.</p>
+        <div id="post-fields">
+          <label class="field"><span>Title</span><input id="post-title" type="text" required autocomplete="off"></label>
+          <div class="field-row">
+            <label class="field"><span>Category</span><input id="post-category" type="text" autocomplete="off"></label>
+            <label class="field"><span>Card color</span><select id="post-theme"><option value="card-teal">Teal card</option><option value="card-sand">Sand card</option></select></label>
+          </div>
+          <div class="field-row">
+            <label class="field"><span>Date (optional)</span><input id="post-date" type="date"></label>
+            <label class="field"><span>Extra label (optional)</span><input id="post-label" type="text" placeholder="e.g. 2026–2027" autocomplete="off"></label>
+          </div>
+          <label class="field"><span>Summary</span><textarea id="post-excerpt" rows="3"></textarea></label>
+          <label class="field"><span>Full post</span><textarea id="post-body" rows="9" aria-describedby="body-hint"></textarea><p class="hint" id="body-hint">Plain text. Separate paragraphs with a blank line. Leave empty for a short post without a “Read more” section.</p></label>
+          <div class="post-actions">
+            <div class="reorder"><button type="button" class="button" id="move-up">Move up</button><button type="button" class="button" id="move-down">Move down</button></div>
+            <button type="button" class="button danger" id="delete-post">Delete post</button>
+          </div>
+        </div>
+
+        <details class="page-options">
+          <summary>Page headings</summary>
+          <label class="field"><span>Page title</span><input id="page-title" type="text"></label>
+          <label class="field"><span>Introduction</span><textarea id="page-intro" rows="3"></textarea></label>
+          <label class="field"><span>Posts section heading</span><input id="page-section" type="text"></label>
+        </details>
+      </section>
+
+      <section class="panel preview-panel" aria-labelledby="preview-title">
+        <div class="panel-title"><h2 id="preview-title">Page preview</h2></div>
+        <iframe id="preview" title="Blog page preview" sandbox="" referrerpolicy="no-referrer"></iframe>
+        <p class="hint">The preview uses your site’s style.css when available. Navigation and scripts are disabled in the preview.</p>
+      </section>
+    </fieldset>
+
+    <p class="publishing"><strong>To publish:</strong> Download blog.html, then replace that file on your website. Edits stay in this tab until you download. This editor does not change the live site or provide a private login.</p>
+    <noscript><p>Enable JavaScript to use the editor.</p></noscript>
+  </div>
+
+  <!-- The copy of the blog from this conversation is embedded below. -->
+  <script type="application/octet-stream" id="blog-template">PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgPG1ldGEgY2hhcnNldD0iVVRGLTgiPgogIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wIj4KICA8bWV0YQogICAgbmFtZT0iZGVzY3JpcHRpb24iCiAgICBjb250ZW50PSJCdWlsZCBub3RlcywgcHJvZ3JhbW1pbmcgdXBkYXRlcywgYW5kIHRlYW0gbmV3cyBmcm9tIFN1cmYgUm9ib3RpY3MsIEZUQyBUZWFtIDM3MTgyLiIKICA+CgogIDx0aXRsZT5CbG9nIHwgU3VyZiBSb2JvdGljczwvdGl0bGU+CgogIDxsaW5rIHJlbD0iaWNvbiIgdHlwZT0iaW1hZ2UveC1pY29uIiBocmVmPSJ0ZW1wbG9nby5wbmciPgogIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0ic3R5bGUuY3NzIj4KICA8bGluawogICAgaHJlZj0iaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3MyP2ZhbWlseT1CZWJhcytOZXVlJmZhbWlseT1ETStTYW5zOml0YWwsd2dodEAwLDMwMDswLDQwMDswLDUwMDswLDcwMDsxLDMwMCZmYW1pbHk9U3BhY2UrTW9ubzp3Z2h0QDQwMDs3MDAmZGlzcGxheT1zd2FwIgogICAgcmVsPSJzdHlsZXNoZWV0IgogID4KCiAgPHN0eWxlPgogICAgLyogQ2FyZCBjb2xvcnMsIGNvcm5lcnMsIGZvbnRzLCBhbmQgZWZmZWN0cyBjb21lIGZyb20gc3R5bGUuY3NzLiAqLwogICAgLyogVGhlc2UgYWRkaXRpb25zIGFwcGx5IG9ubHkgdG8gdGhpcyBwYWdlLiAqLwogICAgLnBhZ2UtYmxvZyAuaGVybyB7CiAgICAgIGhlaWdodDogYXV0bzsKICAgICAgbWluLWhlaWdodDogMzgwcHg7CiAgICAgIHBhZGRpbmc6IDE0MHB4IDI0cHggNzJweDsKICAgIH0KCiAgICAucGFnZS1ibG9nIC5oZXJvLXRpdGxlIHsKICAgICAgZm9udC1zaXplOiBjbGFtcCgzLjVyZW0sIDEwdncsIDdyZW0pOwogICAgfQoKICAgIC5wYWdlLWJsb2cgLmJsb2ctaW50cm8gewogICAgICBtYXgtd2lkdGg6IDM4cmVtOwogICAgICBtYXJnaW46IDFyZW0gYXV0byAwOwogICAgICBmb250LXNpemU6IDFyZW07CiAgICAgIGxpbmUtaGVpZ2h0OiAxLjc7CiAgICB9CgogICAgLnBhZ2UtYmxvZyAuYmxvZy1ncmlkIHsKICAgICAgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOiByZXBlYXQoMiwgbWlubWF4KDAsIDFmcikpOwogICAgICBhbGlnbi1pdGVtczogc3RhcnQ7CiAgICAgIG1hcmdpbi10b3A6IDJyZW07CiAgICB9CgogICAgLnBhZ2UtYmxvZyAuYmxvZy1jYXJkIHsKICAgICAgbWluLXdpZHRoOiAwOwogICAgICBvdmVyZmxvdy13cmFwOiBhbnl3aGVyZTsKICAgIH0KCiAgICAucGFnZS1ibG9nIC5ibG9nLW1ldGEgewogICAgICBkaXNwbGF5OiBmbGV4OwogICAgICBmbGV4LXdyYXA6IHdyYXA7CiAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7CiAgICAgIGdhcDogMC41cmVtIDFyZW07CiAgICAgIG1hcmdpbi1ib3R0b206IDFyZW07CiAgICAgIGZvbnQtZmFtaWx5OiAiU3BhY2UgTW9ubyIsIG1vbm9zcGFjZTsKICAgICAgZm9udC1zaXplOiAwLjg3NXJlbTsKICAgICAgbGluZS1oZWlnaHQ6IDEuNjsKICAgIH0KCiAgICAucGFnZS1ibG9nIC5ibG9nLWNhdGVnb3J5IHsKICAgICAgZm9udC13ZWlnaHQ6IDcwMDsKICAgIH0KCiAgICAucGFnZS1ibG9nIC5ibG9nLWNhcmQgcCB7CiAgICAgIGZvbnQtc2l6ZTogMXJlbTsKICAgICAgbGluZS1oZWlnaHQ6IDEuNzU7CiAgICB9CgogICAgLnBhZ2UtYmxvZyAuYmxvZy1kZXRhaWxzIHsKICAgICAgbWFyZ2luLXRvcDogMS41cmVtOwogICAgICBib3JkZXItdG9wOiAxcHggc29saWQgY3VycmVudENvbG9yOwogICAgfQoKICAgIC5wYWdlLWJsb2cgLmJsb2ctZGV0YWlscyBzdW1tYXJ5IHsKICAgICAgcGFkZGluZzogMXJlbSAwOwogICAgICBjdXJzb3I6IHBvaW50ZXI7CiAgICAgIGZvbnQtc2l6ZTogMXJlbTsKICAgICAgZm9udC13ZWlnaHQ6IDcwMDsKICAgIH0KCiAgICAucGFnZS1ibG9nIC5ibG9nLWRldGFpbHMgc3VtbWFyeTpob3ZlciB7CiAgICAgIHRleHQtZGVjb3JhdGlvbjogdW5kZXJsaW5lOwogICAgICB0ZXh0LXVuZGVybGluZS1vZmZzZXQ6IDAuMmVtOwogICAgfQoKICAgIC5wYWdlLWJsb2cgLmJsb2ctZGV0YWlscyBwICsgcCB7CiAgICAgIG1hcmdpbi10b3A6IDFyZW07CiAgICB9CgogICAgLnBhZ2UtYmxvZyAuYmxvZy1kZXRhaWxzIC5sYWJlbC1jbG9zZSwKICAgIC5wYWdlLWJsb2cgLmJsb2ctZGV0YWlsc1tvcGVuXSAubGFiZWwtb3BlbiB7CiAgICAgIGRpc3BsYXk6IG5vbmU7CiAgICB9CgogICAgLnBhZ2UtYmxvZyAuYmxvZy1kZXRhaWxzW29wZW5dIC5sYWJlbC1jbG9zZSB7CiAgICAgIGRpc3BsYXk6IGlubGluZTsKICAgIH0KCiAgICAucGFnZS1ibG9nIDpmb2N1cy12aXNpYmxlIHsKICAgICAgb3V0bGluZTogMnB4IHNvbGlkIGN1cnJlbnRDb2xvcjsKICAgICAgb3V0bGluZS1vZmZzZXQ6IDVweDsKICAgIH0KCiAgICAuYmxvZy1za2lwLWxpbmsgewogICAgICBwb3NpdGlvbjogZml4ZWQ7CiAgICAgIHRvcDogMC43NXJlbTsKICAgICAgbGVmdDogMC43NXJlbTsKICAgICAgei1pbmRleDogOTk5OTsKICAgICAgcGFkZGluZzogMC43NXJlbSAxcmVtOwogICAgICBjb2xvcjogIzExMTsKICAgICAgYmFja2dyb3VuZDogI2ZmZjsKICAgICAgYm9yZGVyLXJhZGl1czogOHB4OwogICAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoLTIwMCUpOwogICAgfQoKICAgIC5ibG9nLXNraXAtbGluazpmb2N1cyB7CiAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgwKTsKICAgIH0KCiAgICBAbWVkaWEgKG1heC13aWR0aDogNzAwcHgpIHsKICAgICAgLnBhZ2UtYmxvZyAuYmxvZy1ncmlkIHsKICAgICAgICBncmlkLXRlbXBsYXRlLWNvbHVtbnM6IG1pbm1heCgwLCAxZnIpOwogICAgICB9CgogICAgICAucGFnZS1ibG9nIC5oZXJvIHsKICAgICAgICBtaW4taGVpZ2h0OiAzMjBweDsKICAgICAgICBwYWRkaW5nOiAxMjBweCAyMHB4IDU2cHg7CiAgICAgIH0KICAgIH0KCiAgICBAbWVkaWEgKHByZWZlcnMtcmVkdWNlZC1tb3Rpb246IHJlZHVjZSkgewogICAgICAucGFnZS1ibG9nICosCiAgICAgIC5wYWdlLWJsb2cgKjo6YmVmb3JlLAogICAgICAucGFnZS1ibG9nICo6OmFmdGVyIHsKICAgICAgICBhbmltYXRpb246IG5vbmUgIWltcG9ydGFudDsKICAgICAgICB0cmFuc2l0aW9uOiBub25lICFpbXBvcnRhbnQ7CiAgICAgICAgc2Nyb2xsLWJlaGF2aW9yOiBhdXRvICFpbXBvcnRhbnQ7CiAgICAgIH0KICAgIH0KICA8L3N0eWxlPgo8L2hlYWQ+Cgo8Ym9keSBjbGFzcz0icGFnZS1ob21lIHBhZ2UtYmxvZyI+CiAgPGEgY2xhc3M9ImJsb2ctc2tpcC1saW5rIiBocmVmPSIjbWFpbi1jb250ZW50Ij5Ta2lwIHRvIGJsb2cgcG9zdHM8L2E+CgogIDwhLS0gTkFWOiBVc2VzIHRoZSBzYW1lIG1hcmt1cCBhbmQgbWFpbi5qcyBob29rcyBhcyB5b3VyIGhvbWUgcGFnZS4gLS0+CiAgPG5hdiBjbGFzcz0ibmF2IiBhcmlhLWxhYmVsPSJNYWluIG5hdmlnYXRpb24iPgogICAgPGEgaHJlZj0iLyIgY2xhc3M9Im5hdi1sb2dvIj4KICAgICAgPHNwYW4gY2xhc3M9ImxvZ28td2F2ZSIgYXJpYS1oaWRkZW49InRydWUiPn48L3NwYW4+CiAgICAgIFNVUkYgUk9CT1RJQ1MKICAgIDwvYT4KCiAgICA8YnV0dG9uCiAgICAgIGNsYXNzPSJuYXYtdG9nZ2xlIgogICAgICBpZD0ibmF2VG9nZ2xlIgogICAgICB0eXBlPSJidXR0b24iCiAgICAgIGFyaWEtbGFiZWw9IlRvZ2dsZSBtZW51IgogICAgICBhcmlhLWNvbnRyb2xzPSJuYXZMaW5rcyIKICAgID4KICAgICAgPHNwYW4+PC9zcGFuPgogICAgICA8c3Bhbj48L3NwYW4+CiAgICAgIDxzcGFuPjwvc3Bhbj4KICAgIDwvYnV0dG9uPgoKICAgIDx1bCBjbGFzcz0ibmF2LWxpbmtzIiBpZD0ibmF2TGlua3MiPgogICAgICA8bGk+PGEgaHJlZj0iLyI+SG9tZTwvYT48L2xpPgogICAgICA8bGk+PGEgaHJlZj0iYWJvdXQiPkFib3V0IFVzPC9hPjwvbGk+CiAgICAgIDxsaT48YSBocmVmPSJzZWFzb24iPjIwMjbigJMyNyBTZWFzb248L2E+PC9saT4KICAgICAgPGxpPjxhIGhyZWY9Im91dHJlYWNoIj5PdXRyZWFjaCAmYW1wOyBTcG9uc29yczwvYT48L2xpPgogICAgICA8bGk+PGEgaHJlZj0icm9ib3QiPlJvYm90PC9hPjwvbGk+CiAgICAgIDxsaT48YSBocmVmPSJibG9nLmh0bWwiIGNsYXNzPSJhY3RpdmUiIGFyaWEtY3VycmVudD0icGFnZSI+QmxvZzwvYT48L2xpPgogICAgPC91bD4KICA8L25hdj4KCiAgPCEtLSBIRVJPIC0tPgogIDxoZWFkZXIgY2xhc3M9Imhlcm8iPgogICAgPGRpdiBjbGFzcz0iaGVyby1iZyIgYXJpYS1oaWRkZW49InRydWUiPgogICAgICA8ZGl2IGNsYXNzPSJ3YXZlIHdhdmUxIj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0id2F2ZSB3YXZlMiI+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9IndhdmUgd2F2ZTMiPjwvZGl2PgogICAgPC9kaXY+CgogICAgPGRpdiBjbGFzcz0iaGVyby1jb250ZW50Ij4KICAgICAgPHAgY2xhc3M9Imhlcm8tZXllYnJvdyI+U3VyZiBSb2JvdGljcyDCtyBGVEMgVGVhbSAzNzE4MjwvcD4KICAgICAgPGgxIGNsYXNzPSJoZXJvLXRpdGxlIj5URUFNIEJMT0c8L2gxPgogICAgICA8cCBjbGFzcz0iYmxvZy1pbnRybyI+CiAgICAgICAgQnVpbGQgbm90ZXMsIHByb2dyYW1taW5nIHVwZGF0ZXMsIGFuZCBzdG9yaWVzIGZyb20gb3VyIHRlYW0uCiAgICAgIDwvcD4KICAgIDwvZGl2PgogIDwvaGVhZGVyPgoKICA8bWFpbiBpZD0ibWFpbi1jb250ZW50IiB0YWJpbmRleD0iLTEiPgogICAgPHNlY3Rpb24gY2xhc3M9InNlY3Rpb24gaGlnaGxpZ2h0cyIgYXJpYS1sYWJlbGxlZGJ5PSJ1cGRhdGVzLXRpdGxlIj4KICAgICAgPGRpdiBjbGFzcz0iY29udGFpbmVyIj4KICAgICAgICA8cCBjbGFzcz0ic2VjdGlvbi1leWVicm93Ij5MYXRlc3QgVXBkYXRlczwvcD4KICAgICAgICA8aDIgY2xhc3M9InNlY3Rpb24tdGl0bGUiIGlkPSJ1cGRhdGVzLXRpdGxlIj5Gcm9tIHRoZSB3b3Jrc2hvcC48L2gyPgoKICAgICAgICA8IS0tCiAgICAgICAgICBTVEFSVEVSIFBPU1RTOiBFZGl0IHRoZXNlIHRpdGxlcyBhbmQgcGFyYWdyYXBocyBmb3IgeW91ciByZWFsIHVwZGF0ZXMuCiAgICAgICAgICBUbyBhZGQgYSBwb3N0LCBjb3B5IG9uZSBjb21wbGV0ZSA8YXJ0aWNsZT4gYmxvY2suCiAgICAgICAgICBVc2UgY2FyZC10ZWFsIG9yIGNhcmQtc2FuZCB0byByZXVzZSB5b3VyIGV4aXN0aW5nIGNhcmQgc3R5bGVzLgogICAgICAgICAgQWRkIGRhdGVzIHdpdGggPHRpbWUgZGF0ZXRpbWU9IllZWVktTU0tREQiPk1vbnRoIEQsIFlZWVk8L3RpbWU+LgogICAgICAgIC0tPgogICAgICAgIDxkaXYgY2xhc3M9ImNhcmRzLWdyaWQgYmxvZy1ncmlkIj4KCiAgICAgICAgICA8IS0tIFBPU1QgMSAtLT4KICAgICAgICAgIDxhcnRpY2xlIGNsYXNzPSJjYXJkIGNhcmQtdGVhbCBibG9nLWNhcmQiIGFyaWEtbGFiZWxsZWRieT0icG9zdC1zZWFzb24iPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJibG9nLW1ldGEiPgogICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJibG9nLWNhdGVnb3J5Ij5TZWFzb24gUHJldmlldzwvc3Bhbj4KICAgICAgICAgICAgICA8c3Bhbj4yMDI24oCTMjAyNzwvc3Bhbj4KICAgICAgICAgICAgPC9kaXY+CgogICAgICAgICAgICA8aDMgaWQ9InBvc3Qtc2Vhc29uIj5HZXR0aW5nIHJlYWR5IGZvciBvdXIgZmlyc3Qgc2Vhc29uPC9oMz4KICAgICAgICAgICAgPHA+CiAgICAgICAgICAgICAgU2l4IHRlYW0gbWVtYmVycy4gT25lIHJvYm90IHRvIGJ1aWxkLiBXZeKAmXJlIGdldHRpbmcgcmVhZHkKICAgICAgICAgICAgICBmb3IgdGhlIDIwMjbigJMyNyBGSVJTVMKuIFRlY2ggQ2hhbGxlbmdlIHNlYXNvbi4KICAgICAgICAgICAgPC9wPgoKICAgICAgICAgICAgPGRldGFpbHMgY2xhc3M9ImJsb2ctZGV0YWlscyI+CiAgICAgICAgICAgICAgPHN1bW1hcnk+CiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0ibGFiZWwtb3BlbiI+UmVhZCBtb3JlPC9zcGFuPgogICAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImxhYmVsLWNsb3NlIj5SZWFkIGxlc3M8L3NwYW4+CiAgICAgICAgICAgICAgPC9zdW1tYXJ5PgogICAgICAgICAgICAgIDxwPgogICAgICAgICAgICAgICAgT3VyIHBsYW5zIGJyaW5nIHRvZ2V0aGVyIHJvYm90IGRlc2lnbiwgaGFuZHMtb24gZmFicmljYXRpb24sCiAgICAgICAgICAgICAgICBhbmQgcHJvZ3JhbW1pbmcuIEVhY2ggcGFydCBnaXZlcyB1cyBhIGRpZmZlcmVudCBjaGFsbGVuZ2UKICAgICAgICAgICAgICAgIHRvIHdvcmsgdGhyb3VnaCBhcyBhIHRlYW0uCiAgICAgICAgICAgICAgPC9wPgogICAgICAgICAgICAgIDxwPgogICAgICAgICAgICAgICAgV2XigJlsbCBzaGFyZSB1cGRhdGVzIGhlcmUgYXMgdGhlIHNlYXNvbiBkZXZlbG9wcywgZnJvbSBvdXIKICAgICAgICAgICAgICAgIGVhcmx5IGlkZWFzIHRvIHRoZSBjaGFuZ2VzIHdlIG1ha2UgYWxvbmcgdGhlIHdheS4KICAgICAgICAgICAgICA8L3A+CiAgICAgICAgICAgIDwvZGV0YWlscz4KICAgICAgICAgIDwvYXJ0aWNsZT4KCiAgICAgICAgICA8IS0tIFBPU1QgMiAtLT4KICAgICAgICAgIDxhcnRpY2xlIGNsYXNzPSJjYXJkIGNhcmQtc2FuZCBibG9nLWNhcmQiIGFyaWEtbGFiZWxsZWRieT0icG9zdC1ub3RlYm9vayI+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImJsb2ctbWV0YSI+CiAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImJsb2ctY2F0ZWdvcnkiPlRlYW0gTmV3czwvc3Bhbj4KICAgICAgICAgICAgICA8dGltZSBkYXRldGltZT0iMjAyNi0wNy0wMiI+SnVseSAyLCAyMDI2PC90aW1lPgogICAgICAgICAgICA8L2Rpdj4KCiAgICAgICAgICAgIDxoMyBpZD0icG9zdC1ub3RlYm9vayI+T3VyIGJsb2cgaGFzIGEgbmV3IGhvbWU8L2gzPgogICAgICAgICAgICA8cD4KICAgICAgICAgICAgICBPbiBKdWx5IDIsIDIwMjYsIG91ciBibG9nIHdhcyBzdWNjZXNzZnVsbHkgbWlncmF0ZWQKICAgICAgICAgICAgICB0byB0aGUgZW5naW5lZXJpbmcgbm90ZWJvb2suCiAgICAgICAgICAgIDwvcD4KCiAgICAgICAgICAgIDxkZXRhaWxzIGNsYXNzPSJibG9nLWRldGFpbHMiPgogICAgICAgICAgICAgIDxzdW1tYXJ5PgogICAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImxhYmVsLW9wZW4iPlJlYWQgbW9yZTwvc3Bhbj4KICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJsYWJlbC1jbG9zZSI+UmVhZCBsZXNzPC9zcGFuPgogICAgICAgICAgICAgIDwvc3VtbWFyeT4KICAgICAgICAgICAgICA8cD4KICAgICAgICAgICAgICAgIFRoZSBlbmdpbmVlcmluZyBub3RlYm9vayBpcyB0aGUgaG9tZSBmb3Igb3VyIGRldGFpbGVkCiAgICAgICAgICAgICAgICBwcm9qZWN0IHJlY29yZHMuIFRoaXMgcGFnZSB3aWxsIHNoYXJlIGhpZ2hsaWdodHMgYW5kIHRlYW0KICAgICAgICAgICAgICAgIG5ld3MgYXMgd2UgY29udGludWUgYnVpbGRpbmcgYW5kIGxlYXJuaW5nLgogICAgICAgICAgICAgIDwvcD4KICAgICAgICAgICAgPC9kZXRhaWxzPgogICAgICAgICAgPC9hcnRpY2xlPgoKICAgICAgICAgIDwhLS0gUE9TVCAzIC0tPgogICAgICAgICAgPGFydGljbGUgY2xhc3M9ImNhcmQgY2FyZC1zYW5kIGJsb2ctY2FyZCIgYXJpYS1sYWJlbGxlZGJ5PSJwb3N0LWJ1aWxkIj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0iYmxvZy1tZXRhIj4KICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0iYmxvZy1jYXRlZ29yeSI+QnVpbGQ8L3NwYW4+CiAgICAgICAgICAgIDwvZGl2PgoKICAgICAgICAgICAgPGgzIGlkPSJwb3N0LWJ1aWxkIj5Gcm9tIGFuIGlkZWEgdG8gYSByb2JvdDwvaDM+CiAgICAgICAgICAgIDxwPgogICAgICAgICAgICAgIFdlIGRlc2lnbiBhbmQgZmFicmljYXRlIGNvbXBldGl0aXZlIHJvYm90cyB1c2luZyBPbnNoYXBlIENBRAogICAgICAgICAgICAgIGFuZCBoYW5kcy1vbiBmYWJyaWNhdGlvbi4KICAgICAgICAgICAgPC9wPgoKICAgICAgICAgICAgPGRldGFpbHMgY2xhc3M9ImJsb2ctZGV0YWlscyI+CiAgICAgICAgICAgICAgPHN1bW1hcnk+CiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0ibGFiZWwtb3BlbiI+UmVhZCBtb3JlPC9zcGFuPgogICAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImxhYmVsLWNsb3NlIj5SZWFkIGxlc3M8L3NwYW4+CiAgICAgICAgICAgICAgPC9zdW1tYXJ5PgogICAgICAgICAgICAgIDxwPgogICAgICAgICAgICAgICAgT3VyIGJ1aWxkIHVwZGF0ZXMgd2lsbCBmb2xsb3cgdGhhdCBwcm9jZXNzOiB0aGUgaWRlYXMgd2UKICAgICAgICAgICAgICAgIGV4cGxvcmUsIHRoZSBwYXJ0cyB3ZSBtYWtlLCBhbmQgd2hhdCB3ZSBsZWFybiB3aGVuIHdlIHB1dAogICAgICAgICAgICAgICAgdGhlbSB0b2dldGhlci4KICAgICAgICAgICAgICA8L3A+CiAgICAgICAgICAgICAgPHA+CiAgICAgICAgICAgICAgICBXZSB3YW50IHRvIHNob3cgdGhlIGRlY2lzaW9ucyBiZWhpbmQgdGhlIHJvYm90IGFzIHdlbGwKICAgICAgICAgICAgICAgIGFzIHRoZSBmaW5pc2hlZCByZXN1bHQuCiAgICAgICAgICAgICAgPC9wPgogICAgICAgICAgICA8L2RldGFpbHM+CiAgICAgICAgICA8L2FydGljbGU+CgogICAgICAgICAgPCEtLSBQT1NUIDQgLS0+CiAgICAgICAgICA8YXJ0aWNsZSBjbGFzcz0iY2FyZCBjYXJkLXRlYWwgYmxvZy1jYXJkIiBhcmlhLWxhYmVsbGVkYnk9InBvc3QtY29kZSI+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImJsb2ctbWV0YSI+CiAgICAgICAgICAgICAgPHNwYW4gY2xhc3M9ImJsb2ctY2F0ZWdvcnkiPkNvZGU8L3NwYW4+CiAgICAgICAgICAgIDwvZGl2PgoKICAgICAgICAgICAgPGgzIGlkPSJwb3N0LWNvZGUiPlBsYW5uaW5nIG91ciByb2JvdOKAmXMgbmV4dCBtb3ZlPC9oMz4KICAgICAgICAgICAgPHA+CiAgICAgICAgICAgICAgT3VyIHNvZnR3YXJlIHRlYW0gcGxhbnMgdG8gZGV2ZWxvcCBhdXRvbm9tb3VzIHJvdXRpbmVzCiAgICAgICAgICAgICAgYW5kIGRyaXZlci1hc3Npc3Qgc3lzdGVtcyB1c2luZyBGVEMgQmxvY2tzLCB0aGUgRlRDIFNESywKICAgICAgICAgICAgICBhbmQgY29tcHV0ZXIgdmlzaW9uLgogICAgICAgICAgICA8L3A+CgogICAgICAgICAgICA8ZGV0YWlscyBjbGFzcz0iYmxvZy1kZXRhaWxzIj4KICAgICAgICAgICAgICA8c3VtbWFyeT4KICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzPSJsYWJlbC1vcGVuIj5SZWFkIG1vcmU8L3NwYW4+CiAgICAgICAgICAgICAgICA8c3BhbiBjbGFzcz0ibGFiZWwtY2xvc2UiPlJlYWQgbGVzczwvc3Bhbj4KICAgICAgICAgICAgICA8L3N1bW1hcnk+CiAgICAgICAgICAgICAgPHA+CiAgICAgICAgICAgICAgICBQcm9ncmFtbWluZyB1cGRhdGVzIHdpbGwgY292ZXIgdGhlIGJlaGF2aW9ycyB3ZeKAmXJlIHdvcmtpbmcKICAgICAgICAgICAgICAgIG9uIGFuZCB3aGF0IGhhcHBlbnMgd2hlbiB3ZSB0ZXN0IHRoZW0gb24gdGhlIHJvYm90LgogICAgICAgICAgICAgIDwvcD4KICAgICAgICAgICAgICA8cD4KICAgICAgICAgICAgICAgIFdl4oCZbGwgc2hhcmUgYm90aCB0aGUgd29ya2luZyBzb2x1dGlvbnMgYW5kIHRoZSBwcm9ibGVtcwogICAgICAgICAgICAgICAgdGhhdCBoZWxwIHVzIHVuZGVyc3RhbmQgb3VyIGNvZGUgYmV0dGVyLgogICAgICAgICAgICAgIDwvcD4KICAgICAgICAgICAgPC9kZXRhaWxzPgogICAgICAgICAgPC9hcnRpY2xlPgoKICAgICAgICA8L2Rpdj4KICAgICAgPC9kaXY+CiAgICA8L3NlY3Rpb24+CiAgPC9tYWluPgoKICA8IS0tIEZPT1RFUiAtLT4KICA8Zm9vdGVyIGNsYXNzPSJmb290ZXIiPgogICAgPGRpdiBjbGFzcz0iY29udGFpbmVyIGZvb3Rlci1pbm5lciI+CiAgICAgIDxkaXYgY2xhc3M9ImZvb3Rlci1icmFuZCI+CiAgICAgICAgPHNwYW4gY2xhc3M9ImxvZ28td2F2ZSIgYXJpYS1oaWRkZW49InRydWUiPn48L3NwYW4+CiAgICAgICAgU1VSRiBST0JPVElDUwogICAgICAgIDxwPnRlYW13b3JrLCBlZmZvcnQsIGFuZCBpbnRlZ3JpdHk8L3A+CiAgICAgIDwvZGl2PgoKICAgICAgPG5hdiBjbGFzcz0iZm9vdGVyLW5hdiIgYXJpYS1sYWJlbD0iRm9vdGVyIG5hdmlnYXRpb24iPgogICAgICAgIDxhIGhyZWY9Ii8iPkhvbWU8L2E+CiAgICAgICAgPGEgaHJlZj0iYWJvdXQiPkFib3V0PC9hPgogICAgICAgIDxhIGhyZWY9InNlYXNvbiI+U2Vhc29uPC9hPgogICAgICAgIDxhIGhyZWY9Im91dHJlYWNoIj5PdXRyZWFjaDwvYT4KICAgICAgICA8YSBocmVmPSJyb2JvdCI+Um9ib3Q8L2E+CiAgICAgICAgPGEgaHJlZj0iYmxvZy5odG1sIiBhcmlhLWN1cnJlbnQ9InBhZ2UiPkJsb2c8L2E+CiAgICAgIDwvbmF2PgoKICAgICAgPGltZwogICAgICAgIHNyYz0iRklSU1RUZWNoX2ljb25Ib3J6X1JHQl9yZXZlcnNlLnBuZy53ZWJwIgogICAgICAgIGFsdD0iRklSU1TCriBUZWNoIENoYWxsZW5nZSBMb2dvIgogICAgICAgIHdpZHRoPSIyMDAiCiAgICAgICAgbG9hZGluZz0ibGF6eSIKICAgICAgPgoKICAgICAgPHAgY2xhc3M9ImZvb3Rlci1jb3B5Ij4KICAgICAgICDCqSAyMDI2IFN1cmYgUm9ib3RpY3MuIFRoZSBGSVJTVMKuIFRlY2ggQ2hhbGxlbmdlIExvZ28KICAgICAgICBpcyBhIHRyYWRlbWFyayBvZiBGSVJTVMKuCiAgICAgIDwvcD4KICAgIDwvZGl2PgogIDwvZm9vdGVyPgoKICA8c2NyaXB0IHNyYz0ibWFpbi5qcyI+PC9zY3JpcHQ+CjwvYm9keT4KPC9odG1sPgo=</script>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+      const parser = new DOMParser();
+      const state = { source:"", posts:[], selected:null, dirty:false, loading:false, page:{}, originalPage:{} };
+      let previewTimer;
+      let sequence = 0;
+      const fieldMap = { title:"post-title", category:"post-category", theme:"post-theme", date:"post-date", label:"post-label", excerpt:"post-excerpt", body:"post-body" };
+      const pageMap = { title:"page-title", intro:"page-intro", section:"page-section" };
+      const pageSelectors = { title:".hero-title", intro:".blog-intro", section:"#updates-title" };
+      const text = (el) => (el?.textContent || "").replace(/\s+/g, " ").trim();
+      const unique = () => "surf-blog-" + Date.now().toString(36) + "-" + (++sequence);
+      const current = () => state.posts.find((p) => p.uid === state.selected);
+
+      function status(message, error = false) {
+        $("status").textContent = message;
+        $("status").dataset.error = String(error);
+      }
+
+      function validDate(value) {
+        if (!value) return true;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+        const d = new Date(value + "T00:00:00Z");
+        return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === value;
+      }
+
+      function readSource(source) {
+        const doc = parser.parseFromString(source, "text/html");
+        const grids = doc.querySelectorAll(".cards-grid.blog-grid");
+        if (grids.length !== 1 || !doc.querySelector(".page-blog")) {
+          throw new Error("Please open the blog.html created with this editor. It needs the page-blog and blog-grid classes.");
+        }
+        const posts = Array.from(grids[0].children).map((el) => {
+          if (!el.matches("article.blog-card") || !el.querySelector(":scope > h3")) {
+            throw new Error("This blog has a different card structure. Your current work has been kept.");
+          }
+          const values = {
+            title: text(el.querySelector(":scope > h3")),
+            category: text(el.querySelector(".blog-category")),
+            theme: el.classList.contains("card-sand") ? "card-sand" : "card-teal",
+            date: el.querySelector(".blog-meta time")?.getAttribute("datetime") || "",
+            label: Array.from(el.querySelectorAll(".blog-meta > span:not(.blog-category)")).map(text).join(" · "),
+            excerpt: text(el.querySelector(":scope > p")),
+            body: Array.from(el.querySelectorAll(".blog-details > p")).map(text).join("\n\n")
+          };
+          if (!validDate(values.date)) throw new Error("A post has an unsupported date. Use YYYY-MM-DD in its time element.");
+          return { uid:unique(), element:el.cloneNode(true), original:{...values}, values };
+        });
+        const page = {};
+        for (const [key, selector] of Object.entries(pageSelectors)) {
+          const node = doc.querySelector(selector);
+          if (!node) throw new Error("This blog is missing a heading used by the editor: " + selector);
+          page[key] = text(node);
+        }
+        // Commit only after the complete import passes validation.
+        state.source = source;
+        state.posts = posts;
+        state.selected = posts[0]?.uid || null;
+        state.page = page;
+        state.originalPage = {...page};
+        state.dirty = false;
+        for (const [key, id] of Object.entries(pageMap)) $(id).value = page[key];
+        renderList();
+        showSelected();
+        renderPreview();
+      }
+
+      function makeNode(doc, tag, className, value) {
+        const node = doc.createElement(tag);
+        if (className) node.className = className;
+        if (value !== undefined) node.textContent = value;
+        return node;
+      }
+
+      function renderPost(post, doc) {
+        const v = post.values;
+        const changed = (key) => !post.element || v[key] !== post.original[key];
+        const card = post.element ? doc.importNode(post.element, true) : makeNode(doc, "article", "card blog-card");
+        let heading = card.querySelector(":scope > h3");
+        if (!heading) {
+          heading = makeNode(doc, "h3", "", v.title);
+          heading.id = post.uid;
+          card.append(heading);
+          card.setAttribute("aria-labelledby", heading.id);
+        }
+        if (changed("title")) heading.textContent = v.title;
+        if (changed("theme")) {
+          card.classList.remove("card-teal", "card-sand");
+          card.classList.add(v.theme === "card-sand" ? "card-sand" : "card-teal");
+        }
+
+        if (["category", "date", "label"].some(changed)) {
+          let meta = card.querySelector(":scope > .blog-meta");
+          if (!meta) { meta = makeNode(doc, "div", "blog-meta"); card.prepend(meta); }
+          meta.replaceChildren();
+          if (v.category.trim()) meta.append(makeNode(doc, "span", "blog-category", v.category));
+          if (v.date && validDate(v.date)) {
+            const formatted = new Intl.DateTimeFormat("en-US", {year:"numeric", month:"long", day:"numeric", timeZone:"UTC"}).format(new Date(v.date + "T00:00:00Z"));
+            const date = makeNode(doc, "time", "", formatted);
+            date.setAttribute("datetime", v.date);
+            meta.append(date);
+          }
+          if (v.label.trim()) meta.append(makeNode(doc, "span", "", v.label));
+          if (!meta.childElementCount) meta.remove();
+        }
+
+        if (changed("excerpt")) {
+          let excerpt = card.querySelector(":scope > p");
+          if (!excerpt) { excerpt = makeNode(doc, "p", ""); heading.after(excerpt); }
+          excerpt.textContent = v.excerpt;
+        }
+
+        if (changed("body")) {
+          let details = card.querySelector(":scope > .blog-details");
+          const paragraphs = v.body.trim().split(/\n\s*\n/).filter(Boolean);
+          if (!paragraphs.length) { details?.remove(); }
+          else {
+            if (!details) { details = makeNode(doc, "details", "blog-details"); card.append(details); }
+            const summary = makeNode(doc, "summary", "");
+            summary.append(makeNode(doc, "span", "label-open", "Read more"), makeNode(doc, "span", "label-close", "Read less"));
+            details.replaceChildren(summary, ...paragraphs.map((p) => makeNode(doc, "p", "", p.trim())));
+          }
+        }
+        return card;
+      }
+
+      function buildDocument() {
+        const doc = parser.parseFromString(state.source, "text/html");
+        const grid = doc.querySelector(".cards-grid.blog-grid");
+        grid.replaceChildren(...state.posts.map((p) => renderPost(p, doc)));
+        for (const [key, selector] of Object.entries(pageSelectors)) {
+          if (state.page[key] !== state.originalPage[key]) doc.querySelector(selector).textContent = state.page[key];
+        }
+        return doc;
+      }
+
+      function serialize(doc) { return "<!DOCTYPE html>\n" + doc.documentElement.outerHTML; }
+
+      function renderPreview() {
+        clearTimeout(previewTimer);
+        const doc = buildDocument();
+        // Imported scripts and links never run or navigate in the preview.
+        doc.querySelectorAll("script,iframe,frame,frameset,object,embed,form,base").forEach((el) => el.remove());
+        doc.querySelectorAll("meta[http-equiv]").forEach((el) => el.remove());
+        doc.querySelectorAll("*").forEach((el) => {
+          for (const attr of Array.from(el.attributes)) {
+            if (/^on/i.test(attr.name) || ["srcdoc", "autofocus"].includes(attr.name.toLowerCase())) el.removeAttribute(attr.name);
+          }
+        });
+        doc.querySelectorAll("a").forEach((a) => { a.removeAttribute("href"); a.removeAttribute("target"); });
+        const base = doc.createElement("base");
+        base.href = new URL(".", location.href).href;
+        doc.head.prepend(base);
+        // Low-specificity fallback is for downloaded copies without style.css.
+        const fallback = doc.createElement("style");
+        fallback.textContent = `
+          :where(body){margin:0;background:#0a191f;color:#f5f1e8;font:16px/1.6 "DM Sans",sans-serif}
+          :where(.container){width:min(1100px,90%);margin:auto}
+          :where(.nav,.nav-links,.footer-nav){display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+          :where(.nav){padding:20px 5%}:where(.nav-links){list-style:none;padding:0;margin:0}
+          :where(.nav-toggle){display:none}:where(a){color:inherit;text-decoration:none}
+          :where(.hero){text-align:center}:where(.hero-title){font-family:"Bebas Neue",sans-serif;margin:0}
+          :where(.section,.footer){padding:36px 0}:where(.cards-grid){display:grid;gap:20px}
+          :where(.card){border-radius:24px;padding:28px}:where(.card h3){font-size:1.5rem;line-height:1.25}
+          :where(.card-teal){background:#12515b;color:#f5f1e8}:where(.card-sand){background:#e8c87a;color:#162b33}
+          :where(.footer-inner){display:grid;gap:20px}:where(img,video){max-width:100%;height:auto}
+        `;
+        doc.head.prepend(fallback);
+        $("preview").srcdoc = serialize(doc);
+      }
+
+      function markDirty() {
+        if (!state.dirty) status("You have edits in this tab. Download blog.html to keep them.");
+        state.dirty = true;
+        clearTimeout(previewTimer);
+        previewTimer = setTimeout(renderPreview, 250);
+      }
+
+      function renderList() {
+        const list = $("post-list");
+        list.replaceChildren();
+        $("post-count").textContent = String(state.posts.length);
+        for (const [index, post] of state.posts.entries()) {
+          const li = document.createElement("li");
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "post-button";
+          button.setAttribute("aria-pressed", String(post.uid === state.selected));
+          button.append(makeNode(document, "small", "", String(index + 1).padStart(2, "0") + " · " + (post.values.category || "Post")), makeNode(document, "span", "", post.values.title || "Untitled post"));
+          button.addEventListener("click", () => {
+            state.selected = post.uid;
+            renderList();
+            showSelected();
+            $("post-title").focus();
+          });
+          li.append(button);
+          list.append(li);
+        }
+      }
+
+      function showSelected() {
+        const post = current();
+        $("post-fields").hidden = !post;
+        $("empty-state").hidden = !!post;
+        if (!post) return;
+        for (const [key, id] of Object.entries(fieldMap)) $(id).value = post.values[key];
+        const index = state.posts.indexOf(post);
+        $("move-up").disabled = index === 0;
+        $("move-down").disabled = index === state.posts.length - 1;
+      }
+
+      function setLoading(loading) {
+        state.loading = loading;
+        $("workspace").disabled = loading;
+        for (const id of ["load-published", "open-file", "download"]) $(id).disabled = loading;
+      }
+
+      function canReplace() { return !state.dirty || confirm("Replace the edits in this tab? Download blog.html first if you want to keep them."); }
+
+      async function loadPublished(automatic = false) {
+        if (state.loading || (!automatic && !canReplace())) return;
+        if (!["https:", "http:"].includes(location.protocol)) {
+          status("Use Open blog.html to load a file from your computer. Load published blog works after this editor is uploaded to your site.");
+          return;
+        }
+        setLoading(true);
+        status("Loading the published blog…");
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 12000);
+        try {
+          const response = await fetch(new URL("blog.html", location.href), {cache:"no-store", credentials:"same-origin", signal:controller.signal});
+          if (!response.ok) throw new Error("The site returned HTTP " + response.status + ".");
+          const source = await response.text();
+          readSource(source);
+          status("Published blog loaded. Edits will stay in this tab until you download them.");
+        } catch (error) {
+          status("Could not load the published blog. Your current copy is unchanged. Open your latest blog.html to continue. " + (error.name === "AbortError" ? "The request timed out." : error.message), true);
+        } finally { clearTimeout(timer); setLoading(false); }
+      }
+
+      for (const [key, id] of Object.entries(fieldMap)) {
+        $(id).addEventListener("input", () => {
+          const post = current();
+          if (!post) return;
+          post.values[key] = $(id).value;
+          if (key === "title" || key === "category") renderList();
+          markDirty();
+        });
+      }
+      for (const [key, id] of Object.entries(pageMap)) {
+        $(id).addEventListener("input", () => { state.page[key] = $(id).value; markDirty(); });
+      }
+
+      $("add-post").addEventListener("click", () => {
+        const uid = unique();
+        state.posts.unshift({ uid, element:null, original:{}, values:{title:"New post", category:"Team News", theme:"card-teal", date:"", label:"", excerpt:"", body:""} });
+        state.selected = uid;
+        renderList(); showSelected(); markDirty();
+        $("post-title").focus(); $("post-title").select();
+      });
+
+      function move(delta) {
+        const index = state.posts.findIndex((p) => p.uid === state.selected);
+        const destination = index + delta;
+        if (index < 0 || destination < 0 || destination >= state.posts.length) return;
+        [state.posts[index], state.posts[destination]] = [state.posts[destination], state.posts[index]];
+        renderList(); showSelected(); markDirty();
+      }
+      $("move-up").addEventListener("click", () => move(-1));
+      $("move-down").addEventListener("click", () => move(1));
+      $("delete-post").addEventListener("click", () => {
+        const post = current();
+        if (!post || !confirm('Delete “' + (post.values.title || "Untitled post") + '” from this copy?')) return;
+        const index = state.posts.indexOf(post);
+        state.posts.splice(index, 1);
+        state.selected = state.posts[Math.min(index, state.posts.length - 1)]?.uid || null;
+        renderList(); showSelected(); markDirty();
+      });
+
+      $("load-published").addEventListener("click", () => loadPublished());
+      $("open-file").addEventListener("click", () => $("file-input").click());
+      $("file-input").addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        event.target.value = "";
+        if (!file || !canReplace()) return;
+        if (file.size > 2 * 1024 * 1024) { status("Please choose a blog HTML file smaller than 2 MB.", true); return; }
+        setLoading(true);
+        try { readSource(await file.text()); status("Opened " + file.name + ". Ready to edit."); }
+        catch (error) { status(error.message, true); }
+        finally { setLoading(false); }
+      });
+
+      $("download").addEventListener("click", () => {
+        const invalid = state.posts.find((post) => !post.values.title.trim() || !validDate(post.values.date));
+        if (invalid) {
+          state.selected = invalid.uid; renderList(); showSelected();
+          status("Give every post a title and use a valid date or leave the date empty.", true);
+          $("post-title").focus(); return;
+        }
+        if (!state.page.title.trim()) { status("Add a page title before downloading.", true); return; }
+        const blob = new Blob([serialize(buildDocument()) + "\n"], {type:"text/html;charset=utf-8"});
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url; link.download = "blog.html";
+        document.body.append(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 30000);
+        state.dirty = false;
+        status("Download started. Replace blog.html on your website to publish these changes.");
+      });
+
+      window.addEventListener("beforeunload", (event) => {
+        if (state.dirty) { event.preventDefault(); event.returnValue = ""; }
+      });
+
+      const templateBytes = Uint8Array.from(atob($("blog-template").textContent.trim()), (character) => character.charCodeAt(0));
+      readSource(new TextDecoder().decode(templateBytes));
+      status("Loaded the blog from this conversation. Open your latest blog.html if you have changed it since then.");
+      if (["https:", "http:"].includes(location.protocol)) loadPublished(true);
+    })();
+  </script>
+</body>
+</html>
